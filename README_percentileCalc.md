@@ -4,9 +4,11 @@ A Bash/AWK script to calculate 95th percentile response times from structured lo
 
 The script processes log files in the following format:
 
+```text
 20230322000441:Entity4:584:SUCCESS
 20230322000441:Entity4:737:SUCCESS
 20230322000441:Entity4:939:SUCCESS
+```
 
 The script supports:
 
