@@ -10,6 +10,9 @@ This repository contains a set of Bash scripts I've created for file management,
 2. [chk_mode_ext_script.sh](README_chk_mode_ext_script.md)  
    A script to check and adjust Bash script permissions and extensions. See the linked README for details and usage instructions.
 
+3. [percentileCalc.sh](README_percentileCalc.md)
+   A Bash/AWK script to calculate 95th percentile response times from structured log data, including grouped hourly analysis and filtered queries.
+
 ## Notes
 
 - All scripts are written in Bash and tested on Linux systems.
