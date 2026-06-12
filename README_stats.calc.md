@@ -1,6 +1,6 @@
-# percentileCalc.sh
+# stats_calc.sh
 
-A Bash/AWK script to calculate 95th percentile response times from structured log data.
+A Bash/AWK script to calculate 95th percentile and average response times from structured log data.
 
 The script processes log files in the following format:
 
@@ -12,6 +12,7 @@ The script processes log files in the following format:
 
 The script supports:
 
+- Calculating the average for successful requests
 - Calculating the 95th percentile for successful requests
 - Grouping percentile calculations by hour
 - Filtering by entity name
@@ -29,11 +30,11 @@ The script supports:
 
 Make the script executable:
 
-chmod +x percentileCalc.sh
+chmod +x stats_calc.sh
 
 Run the script:
 
-./percentileCalc.sh
+./stats_calc.sh
 
 You will then be prompted to select one of the available filtering/reporting options.
 

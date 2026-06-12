@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author: Anil Pandit 05/2026
-# calculate the 95th percentile of specified logs from a file of format:
+# calculate the average/95th percentile of specified logs from a file of format:
 # 20230322000441:Entity4:584:SUCCESS
 # 20230322000441:Entity4:737:SUCCESS
 # 20230322000441:Entity4:939:SUCCESS
@@ -13,19 +13,37 @@ usage () {
 }
 
 cat <<- _EOF_
-Please Select:
-    1. Filter logs by success
-    2. Filter logs by success/hour
-    3. Filter logs by success, Entity4 with response time > 1500
-    4. Filter logs by success, Entity4 with response time > 1500/hour
+Please Select log stats:
+    1. Average on success 
+    2. 95th percentile on success 
+    3. 95th percentile on success per hour
+    4. 95th percentile on success, Entity4 with response time > 1500 
+    5. 95th percentile on success, Entity4 with response time > 1500 per hour 
     0. Quit
 _EOF_
 
-read -p "Enter selection [0-4] > "
+read -p "Enter selection [0-5] > "
 
 case "$REPLY" in 
     1)
-        # success
+        # average on success
+        awk '
+        BEGIN{ FS = ":" }
+        $4 == "SUCCESS" {
+            # store running total of response times
+            ++count
+            total += $3 
+
+        }
+        END{
+            # output average value
+            printf "%.2f\n", total / count
+
+        }' interview2.log
+       ;;
+
+     2)
+        # 95th percentile on success
         awk '
         BEGIN{ FS = ":" }
         $4 == "SUCCESS" {
@@ -55,8 +73,8 @@ case "$REPLY" in
         }' interview2.log
        ;;
         
-    2)
-        # success, hourly 
+    3)
+        # 95th percentile on success, hourly 
         awk '
         BEGIN{ FS = ":" }
         $4 == "SUCCESS" {
@@ -92,8 +110,8 @@ case "$REPLY" in
         ' interview2.log
         ;;
 
-    3)
-        # success + Entity4 + >1500
+    4)
+        # 95th percentile on success + Entity4 + >1500
         awk '
         BEGIN{ FS = ":" }                                           
         $2 == "Entity4" && $3 > 1500 && $4 == "SUCCESS" { 
@@ -123,8 +141,8 @@ case "$REPLY" in
         }' interview2.log
         ;;
 
-    4)
-        # success + Entity4 + >1500, hourly
+    5)
+        # 95th percentile on success + Entity4 + >1500, hourly
         awk '
         BEGIN{ FS = ":" }
         $2 == "Entity4" && $3 > 1500 && $4 == "SUCCESS" {
