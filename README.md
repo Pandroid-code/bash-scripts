@@ -1,6 +1,23 @@
-# Bash Scripts Collection
+# Bash / Linux Operations Toolkit
 
-This repository contains a set of Bash scripts I've created for file management, automation, and Linux system tasks. Each script has its own README with more details.
+A collection of Bash scripts for Linux systems administration, log analysis, and operational automation.  
+Built for real-world infrastructure and production support scenarios.
+
+Focus areas:
+- Linux system operations
+- Log parsing and metrics extraction
+- Automation and troubleshooting tooling
+
+## What this repository demonstrates
+
+- Practical Linux CLI and Bash scripting (AWK, regex, log processing)
+- Production-style thinking (metrics, failures, structured logs)
+- Operational automation and tooling mindset
+- Ability to build lightweight internal tools for sysadmin tasks
+
+## Skills demonstrated
+
+Linux, Bash, AWK, log analysis, automation, system troubleshooting, production support tooling
 
 ## Scripts Included
 
