@@ -25,19 +25,19 @@ dirname=$(cd "$dirname" && pwd -P ) || exit 1
 
 # Ask the user for the title of the video
 echo "This script renames video files to a standard format. Ensure the folder contains one series only."
-read -r -p "Enter the title of the series > "       # note: '-r' is "raw" mode. Doesn't interpret backslash escapes 
+read -r -p "Enter the title of the series > " reply       # note: '-r' is "raw" mode. Doesn't interpret backslash escapes 
 
 # Convert spaces in the title to underscores
-if [[ $REPLY ]]; then
-    title=${REPLY// /_}
+if [[ $reply ]]; then
+    title=${reply// /_}
 else
     echo "Invalid response" >&2
     exit 1
 fi
 
 # Initialize the year prompt flag and default year
-year_prompted=false
-default_year=""
+year_prompted=""
+year=""
 
 # Loop through the directory, protecting against empty directories
 shopt -s nullglob
@@ -57,25 +57,19 @@ for f in "$dirname"/*; do
             year="${BASH_REMATCH[2]}"
 
         # For the first file without a year, ask the user    
-        elif [[ ! $year_prompted ]]; then
+        elif [[ -z $year_prompted ]]; then
             read -r -p "Title doesn't contain a year. Enter YYYY or leave blank > " year
             year_prompted=true
-            default_year=$year
 
             # Validate input
             if [[ -n $year && ! $year =~ ^(19|20)[0-9]{2}$ ]]; then
                  echo "Invalid year format. Leaving blank."
                  year=""
-                 default_year=""
             fi
-        else
-
-            # Use the previously entered default year for remaining files
-            year=$default_year
         fi
 
         # Check for episodic format
-        if [[ $f_lc =~ s[^0-9]*([0-9]{1,2})[^0-9]*e[^0-9]*([0-9]{1,2}) ]]; then
+        if [[ $f_lc =~ s[[:alpha:]]*([0-9]{1,2})[^0-9]*e[[:alpha:]]*([0-9]{1,2}) ]]; then
 
             # Extract the season and episode numbers (forcing decimal conversion,
             # so that leading zeroes aren't treated as octal numbers)
@@ -85,11 +79,15 @@ for f in "$dirname"/*; do
             # Construct new filename 
             oldname=${f##*/}
             ext=${f_lc##*.}             
-            newname="${title}_${year}_S${season}_E${episode}.${ext}"
-            
+            if [[ -n $year ]]; then
+                newname="${title}_${year}_S${season}_E${episode}.${ext}"
+            else
+                newname="${title}_S${season}_E${episode}.${ext}"
+            fi
+
             # Check if the new filename already exists before renaming 
             if [[ -e "$dirname/$newname" ]]; then
-                echo "Error: File $newname already exists. Skipping renaming for '$oldname'." >&2
+                echo "Error: File $newname already exists. Skipping renaming." >&2
                 continue
             else
                 mv -- "$f" "$dirname/$newname"
