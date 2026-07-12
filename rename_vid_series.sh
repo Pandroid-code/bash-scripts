@@ -69,12 +69,12 @@ for f in "$dirname"/*; do
         fi
 
         # Check for episodic format
-        if [[ $f_lc =~ s[[:alpha:]]*([0-9]{1,2})[^0-9]*e[[:alpha:]]*([0-9]{1,2}) ]]; then
+        if [[ $f_lc =~ s(eason)?[^0-9]*([0-9]{1,2})[^0-9]*e(pisode)?[^0-9]*([0-9]{1,2}) ]]; then
 
             # Extract the season and episode numbers (forcing decimal conversion,
             # so that leading zeroes aren't treated as octal numbers)
-            season=$(printf "%02d" "$((10#${BASH_REMATCH[1]}))")
-            episode=$(printf "%02d" "$((10#${BASH_REMATCH[2]}))")
+            season=$(printf "%02d" "$((10#${BASH_REMATCH[2]}))")
+            episode=$(printf "%02d" "$((10#${BASH_REMATCH[4]}))")
 
             # Construct new filename 
             oldname=${f##*/}
