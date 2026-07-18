@@ -69,7 +69,9 @@ for f in "$dirname"/*; do
         fi
 
         # Check for episodic format
-        if [[ $f_lc =~ s(eason)?[^0-9]*([0-9]{1,2})[^0-9]*e(pisode)?[^0-9]*([0-9]{1,2}) ]]; then
+        # Match S01E02, Season01Episode02, Season 1 Episode 2, etc.
+        # Prevent the separator from consuming the 'E' of the episode marker.
+        if [[ $f_lc =~ s(eason)?[^0-9]*([0-9]{1,2})[^[:alnum:]]*e(pisode)?[^0-9]*([0-9]{1,2}) ]]; then
 
             # Extract the season and episode numbers (forcing decimal conversion,
             # so that leading zeroes aren't treated as octal numbers)
@@ -79,6 +81,7 @@ for f in "$dirname"/*; do
             # Construct new filename 
             oldname=${f##*/}
             ext=${f_lc##*.}             
+
             if [[ -n $year ]]; then
                 newname="${title}_${year}_S${season}_E${episode}.${ext}"
             else
@@ -90,7 +93,7 @@ for f in "$dirname"/*; do
                 echo "Error: File $newname already exists. Skipping renaming." >&2
                 continue
             else
-                mv -- "$f" "$dirname/$newname"
+                mv -- "$f" "$dirname/$newname" 
                 echo "Renamed $oldname --> $newname"
             fi
         else
