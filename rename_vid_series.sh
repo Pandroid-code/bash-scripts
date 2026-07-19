@@ -70,8 +70,7 @@ for f in "$dirname"/*; do
 
         # Check for episodic format
         # Match S01E02, Season01Episode02, Season 1 Episode 2, etc.
-        # Prevent the separator from consuming the 'E' of the episode marker.
-        if [[ $f_lc =~ s(eason)?[^0-9]*([0-9]{1,2})[^[:alnum:]]*e(pisode)?[^0-9]*([0-9]{1,2}) ]]; then
+        if [[ $f_lc =~ s(eason)?[-_. ]*([0-9]{1,2})[-_. ]*e(pisode)?[-_. ]*([0-9]{1,2}) ]]; then
 
             # Extract the season and episode numbers (forcing decimal conversion,
             # so that leading zeroes aren't treated as octal numbers)
