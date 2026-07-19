@@ -53,7 +53,7 @@ for f in "$dirname"/*; do
     if [[ $f_lc =~ \.(mp4|mov|avi|mkv)$ ]]; then
 
         # Check if the filename contains a year
-        year_re='((19|20)[0-9]{2})'
+        year_re='(19|20)[0-9]{2}'
         if [[ $f =~ $year_re ]]; then
             year="${BASH_REMATCH[0]}"
 
