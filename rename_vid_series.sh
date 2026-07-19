@@ -53,8 +53,9 @@ for f in "$dirname"/*; do
     if [[ $f_lc =~ \.(mp4|mov|avi|mkv)$ ]]; then
 
         # Check if the filename contains a year
-        if [[ $f =~ (^|[^0-9])((19|20)[0-9]{2})([^0-9]|$) ]]; then
-            year="${BASH_REMATCH[2]}"
+        year_re='((19|20)[0-9]{2})'
+        if [[ $f =~ $year_re ]]; then
+            year="${BASH_REMATCH[0]}"
 
         # For the first file without a year, ask the user    
         elif [[ -z $year_prompted ]]; then
@@ -62,7 +63,7 @@ for f in "$dirname"/*; do
             year_prompted=true
 
             # Validate input
-            if [[ -n $year && ! $year =~ ^(19|20)[0-9]{2}$ ]]; then
+            if [[ -n $year && ! $year =~ $year_re ]]; then
                  echo "Invalid year format. Leaving blank."
                  year=""
             fi
@@ -70,7 +71,8 @@ for f in "$dirname"/*; do
 
         # Check for episodic format
         # Match S01E02, Season01Episode02, Season 1 Episode 2, etc.
-        if [[ $f_lc =~ s(eason)?[-_. ]*([0-9]{1,2})[-_. ]*e(pisode)?[-_. ]*([0-9]{1,2}) ]]; then
+        season_episode_re='s(eason)?[-_.[:blank:]]*([0-9]{1,2})[-_.[:blank:]]*e(pisode)?[-_.[:blank:]]*([0-9]{1,2})'
+        if [[ $f_lc =~ $season_episode_re ]]; then
 
             # Extract the season and episode numbers (forcing decimal conversion,
             # so that leading zeroes aren't treated as octal numbers)
